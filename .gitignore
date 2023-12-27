@@ -1,0 +1,3 @@
+# Project exclude paths
+/api-rest-crud/target/
+/validationapi/target/

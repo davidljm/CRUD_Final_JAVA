@@ -1,0 +1,58 @@
+version: "3"
+services:
+  mariadb:
+    image: mariadb
+    container_name: mariadbcrud
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: usuarios
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    networks:
+      - my-network
+  adminer:
+    image: adminer:4.8.1
+    container_name: adminercrud
+    restart: always
+    ports:
+      - "8083:8080"
+    networks:
+      - my-network
+  api1:
+    build:
+      context: ./api-rest-crud
+      dockerfile: Dockerfile
+    container_name: api-rest-crud
+    ports:
+      - "8080:8080"
+    networks:
+      - my-network
+    depends_on:
+      - mariadb
+  api2:
+    build:
+      context: ./validationapi
+      dockerfile: Dockerfile
+    container_name: validationapi
+    ports:
+      - "8081:8081"
+    networks:
+      - my-network
+    depends_on:
+      - mariadb
+
+  api3:
+    build:
+      context: ./front_api_crud
+      dockerfile: Dockerfile
+    container_name: front_api_crud
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network
+
+
+networks:
+  my-network:
